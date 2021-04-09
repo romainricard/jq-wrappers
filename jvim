@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# 2021 - Romain RICARD
+# See license at https://github.com/romainricard/jq-wrappers/blob/main/LICENSE
+
+set -euo pipefail
+
+help(){
+    echo "$0: Format then open a minified JSON file into Vim."
+    echo "The original file won't be modified, only a working version"
+    echo "will be opened into Vim."
+    echo
+    echo "Usage: $0 <input JSON file>"
+}
+
+err(){
+    echo
+    echo "Error: $1"
+}
+
+if [ $# -eq 0 ]; then
+    help
+    err "No JSON file supplied."
+    exit 1
+fi
+
+if [ ! -f $1 ]; then
+    err "The file does not exist.";
+    exit 1;
+fi
+
+jq . < $1 | vim -R "+set syntax=json" -

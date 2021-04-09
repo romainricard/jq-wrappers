@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# 2021 - Romain RICARD
+# See license at https://github.com/romainricard/jq-wrappers/blob/main/LICENSE
+
+set -euo pipefail
+
+help(){
+    echo "$0: Format and save a minified JSON file into another file."
+    echo "This will create the file <input file>_format.json"
+    echo
+    echo "Usage: $0 <input JSON file>"
+}
+
+err(){
+    echo
+    echo "Error: $1"
+}
+
+
+if [ $# -eq 0 ]; then
+    help
+    err "No JSON file supplied."
+    exit 1
+fi
+
+if [ ! -f $1 ]; then
+    help
+    err "The supplied file does not exist.";
+    exit 1;
+fi
+
+OUTFILE="${1%.*}_format.json"
+
+if [ -f $OUTFILE ]; then
+    echo "Error: $OUTFILE already exists."
+    exit 1
+fi
+
+
+jq . < $1 > $OUTFILE
